@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IUEM Connect - Domina el Inglés con IA</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #121824;
+            --app-bg: #0d121c;
+            --primary: #fbff00;
+            --primary-glow: rgba(205, 214, 86, 0.4);
+            --secondary: #2acef7;
+            --secondary-glow: rgba(255, 255, 255, 0.4);
+            --accent: #ffffff;
+            --text-main: #ffffff;
+            --text-muted: #b0b8c4;
+            --glass: rgba(18, 24, 36, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #05080f; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--primary), var(--secondary)); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(#6c6ae8, #1a8bff); }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .bg-glow, .bg-glow-right {
+            position: fixed; width: 600px; height: 600px; z-index: -1;
+            animation: floatGlow 15s infinite alternate ease-in-out;
+        }
+        .bg-glow { background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%); top: -200px; left: -200px; }
+        .bg-glow-right { background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%); bottom: -150px; right: -150px; width: 500px; height: 500px; animation-direction: alternate-reverse; animation-duration: 12s; }
+        @keyframes floatGlow { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(100px, 50px) scale(1.2); } }
+
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 80px 0; }
+
+        /* Floating Navbar */
+        .floating-nav {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-glass); padding: 12px 30px; border-radius: 40px; display: flex; gap: 25px; z-index: 1000;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+            opacity: 0; animation: slideUpNav 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s; transition: all 0.3s ease;
+        }
+        .floating-nav:hover { border-color: rgba(88, 86, 214, 0.5); box-shadow: 0 15px 40px rgba(88, 86, 214, 0.3); }
+        .floating-nav a { color: var(--text-muted); text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 25px; transition: all 0.3s ease; }
+        .floating-nav a:hover, .floating-nav a.active { color: var(--text-main); background: rgba(255, 255, 255, 0.1); }
+        .floating-nav a.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 0 20px var(--primary-glow); font-weight: 600; }
+        @keyframes slideUpNav { to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+
+        /* Hero */
+        header { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; text-align: center; padding-top: 40px; }
+        .hero-content h1 { font-size: 5rem; font-weight: 700; background: linear-gradient(135deg, #ffffff 40%, #a2a1ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; margin-bottom: 20px; letter-spacing: -2px; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s ease forwards; }
+        .hero-content h1 span { color: var(--secondary); -webkit-text-fill-color: initial; background: none; display: block; font-size: 2rem; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 15px; text-shadow: 0 0 20px var(--secondary-glow); }
+        .hero-content p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px auto; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s ease forwards 0.2s; }
+        .cta-btn { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: var(--text-main); padding: 18px 40px; border-radius: 30px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px var(--primary-glow); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s ease forwards 0.4s; border: 1px solid rgba(255,255,255,0.2); }
+        .cta-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 20px 40px rgba(0, 122, 255, 0.5); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Reveals & Titles */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .section-title { font-size: 2.5rem; text-align: center; margin-bottom: 60px; position: relative; }
+        .section-title::after { content: ''; display: block; width: 60px; height: 5px; background: linear-gradient(90deg, var(--primary), var(--secondary)); margin: 15px auto 0 auto; border-radius: 3px; box-shadow: 0 0 10px var(--primary-glow); }
+
+        /* Grids Generales */
+        .problem-grid, .offers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .problem-card, .offer-card { background: linear-gradient(145deg, var(--bg-card), #0d121c); border: 1px solid var(--border-glass); padding: 40px; border-radius: 24px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1; }
+        .problem-card > *, .offer-card > * { position: relative; z-index: 2; }
+        .problem-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(235, 87, 87, 0.25) 0%, transparent 100%); opacity: 0; transition: opacity 0.4s ease; z-index: 0; }
+        .problem-card:hover { transform: translateY(-8px); border-color: rgba(235, 87, 87, 0.6); box-shadow: 0 20px 50px rgba(235, 87, 87, 0.25); }
+        .problem-card:hover::before { opacity: 1; }
+        .offer-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(88, 86, 214, 0.3) 0%, rgba(0, 122, 255, 0.1) 100%); opacity: 0; transition: opacity 0.4s ease; z-index: 0; }
+        .offer-card:hover { transform: translateY(-8px); border-color: rgba(88, 86, 214, 0.6); box-shadow: 0 20px 50px rgba(88, 86, 214, 0.25); }
+        .offer-card:hover::before { opacity: 1; }
+        .problem-card i, .offer-card i { font-size: 2.5rem; margin-bottom: 20px; background: -webkit-linear-gradient(var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 5px 15px rgba(88,86,214,0.4)); }
+        .problem-card i { background: -webkit-linear-gradient(#5856d6, #5856d6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 5px 15px rgba(235,87,87,0.4)); }
+        .problem-card h3, .offer-card h3 { font-size: 1.4rem; margin-bottom: 15px; }
+        .problem-card p, .offer-card p { color: var(--text-muted); line-height: 1.7; }
+
+        /* --- APP SIMULATOR (Phone Mockup) --- */
+        .phone-container { display: flex; justify-content: center; align-items: center; margin-top: 60px; }
+        .phone-mockup { width: 360px; height: 740px; background: #000; border-radius: 50px; padding: 12px; box-shadow: 0 0 0 2px #222, 0 30px 60px rgba(0,0,0,0.6), 0 0 50px var(--primary-glow); position: relative; display: flex; flex-direction: column; }
+        .phone-mockup::before { content: ''; position: absolute; top: 25px; left: 50%; transform: translateX(-50%); width: 100px; height: 25px; background: #000; border-radius: 20px; z-index: 20; }
+        .app-screen-container { background: var(--app-bg); border-radius: 40px; flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        .app-status-bar { display: flex; justify-content: space-between; padding: 15px 25px 10px 25px; font-size: 0.75rem; color: #fff; font-weight: 500; z-index: 10; }
+        .app-status-bar .icons { display: flex; gap: 8px; }
+        .app-content { flex: 1; overflow-y: auto; padding: 10px 20px 80px 20px; }
+        .app-content::-webkit-scrollbar { display: none; }
+        .app-bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(13, 18, 28, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; padding-bottom: 10px; }
+        .app-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #6b7280; font-size: 0.65rem; cursor: pointer; transition: all 0.2s ease; }
+        .app-nav-item i { font-size: 1.2rem; }
+        .app-nav-item.active { color: #a2a1ff; }
+        .screen { display: none; animation: fadeIn 0.3s ease forwards; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+        /* App internal elements */
+        .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; margin-top: 10px;}
+        .app-header h2 { font-size: 1.6rem; font-weight: 600; line-height: 1.2;}
+        .app-header span { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1px;}
+        .app-header-avatar { width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .app-card-progress { background: linear-gradient(135deg, #7b61ff, #5856d6); border-radius: 20px; padding: 25px 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(88,86,214,0.3); }
+        .app-card-progress h3 { font-size: 1.3rem; margin-bottom: 15px; font-weight: 500;}
+        .progress-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-bottom: 15px; overflow: hidden;}
+        .progress-bar-fill { width: 75%; height: 100%; background: #fff; border-radius: 10px;}
+        .progress-stats { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+        .app-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .app-stat-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; text-align: center; }
+        .app-stat-box i { font-size: 1.5rem; margin-bottom: 10px; color: var(--text-muted); }
+        .app-stat-box h4 { font-size: 1.8rem; margin-bottom: 0; }
+        .app-stat-box span { font-size: 0.75rem; color: var(--text-muted); }
+        .app-section-title { font-size: 1.2rem; margin-bottom: 15px; font-weight: 600; }
+        .app-card-daily { background: linear-gradient(135deg, #00c6ff, #0072ff); border-radius: 20px; padding: 25px 20px; box-shadow: 0 10px 20px rgba(0, 114, 255, 0.3); }
+        .app-card-daily h3 { font-size: 1.1rem; margin-bottom: 5px; font-weight: 600;}
+        .app-card-daily p { font-size: 0.8rem; opacity: 0.9; margin-bottom: 15px;}
+        .app-btn-white { background: #fff; color: #0072ff; border: none; padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: transform 0.2s; }
+        .app-btn-white:active { transform: scale(0.95); }
+
+        .achievements-row { display: flex; gap: 12px; overflow-x: auto; margin-bottom: 30px; padding-bottom: 5px; }
+        .achievements-row::-webkit-scrollbar { display: none; }
+        .achievement-box { min-width: 90px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 15px 10px; text-align: center; }
+        .achievement-box.active { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+        .achievement-box i { font-size: 1.5rem; margin-bottom: 10px; color: var(--accent); }
+        .achievement-box span { display: block; font-size: 0.75rem; line-height: 1.2; }
+        .courses-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .course-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 25px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .course-box:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
+        .course-box i { font-size: 2rem; margin-bottom: 15px; color: #fff; }
+        .course-box span { font-size: 0.9rem; font-weight: 500; }
+
+        .ranking-header { text-align: center; margin-bottom: 20px; margin-top: 10px;}
+        .ranking-banner { background: linear-gradient(135deg, #7b61ff, #5856d6); border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(88,86,214,0.3); }
+        .ranking-banner i { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; }
+        .leaderboard-list { display: flex; flex-direction: column; gap: 12px; }
+        .lb-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 15px; display: flex; align-items: center; gap: 15px; position: relative;}
+        .lb-rank { width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); }
+        .lb-item.first .lb-rank { color: var(--accent); }
+        .lb-info { flex: 1; }
+        .lb-info h4 { font-size: 1rem; margin-bottom: 2px; }
+        .lb-info span { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;}
+        .lb-info span i { color: var(--accent); font-size: 0.7rem;}
+        .lb-score { text-align: right; }
+        .lb-score i { color: #ff6b6b; font-size: 0.9rem; display: block;}
+        .lb-score span { font-size: 0.9rem; font-weight: 600; color: var(--accent); }
+        .lb-progress { position: absolute; bottom: -1px; left: 15px; right: 15px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .lb-progress-fill { height: 100%; background: var(--primary); }
+
+        .profile-header { text-align: center; margin-top: 20px; margin-bottom: 30px; }
+        .profile-avatar { width: 90px; height: 90px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 15px auto; box-shadow: 0 10px 20px var(--primary-glow); }
+        .profile-header h2 { font-size: 1.5rem; margin-bottom: 5px; }
+        .profile-stats-list { display: flex; flex-direction: column; gap: 15px; }
+        .p-stat-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 20px; }
+        .p-stat-icon { font-size: 1.5rem; width: 30px; text-align: center; }
+        .p-stat-info h4 { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; margin-bottom: 5px; }
+        .p-stat-info span { font-size: 1.2rem; font-weight: 600; }
+
+        .quiz-header-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-glass); margin-bottom: 20px;}
+        .quiz-box h4 { font-size: 1.2rem; margin-bottom: 25px; line-height: 1.5; }
+        .quiz-option { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-glass); padding: 16px 20px; border-radius: 16px; margin-bottom: 15px; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; }
+        .quiz-option.correct { background: rgba(46, 204, 113, 0.15); border-color: #2ecc71; color: #2ecc71; font-weight: 600; }
+        .quiz-option.wrong { background: rgba(231, 76, 60, 0.15); border-color: #e74c3c; color: #e74c3c; }
+        .success-banner { display: none; text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-top: 20px; color: #2ecc71; font-weight: 600; font-size: 0.9rem; }
+
+        /* Tech Specs */
+        .specs-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .spec-list { display: flex; flex-direction: column; gap: 30px; }
+        .spec-item { display: flex; gap: 20px; align-items: flex-start; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px; border: 1px solid transparent; transition: all 0.3s ease; position: relative; overflow: hidden;}
+        .spec-item::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(145deg, rgba(88, 86, 214, 0.25), rgba(0, 122, 255, 0.05)); opacity: 0; transition: opacity 0.4s ease; z-index: 0; }
+        .spec-item > * { position: relative; z-index: 2; }
+        .spec-item:hover { border-color: rgba(88, 86, 214, 0.5); transform: translateX(10px); box-shadow: 0 15px 30px rgba(88, 86, 214, 0.2); }
+        .spec-item:hover::before { opacity: 1; }
+        .spec-icon { background: linear-gradient(135deg, rgba(0, 122, 255, 0.2), rgba(88, 86, 214, 0.2)); border: 1px solid rgba(88, 86, 214, 0.4); width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--secondary); font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0, 122, 255, 0.2); }
+        .spec-info h4 { font-size: 1.2rem; margin-bottom: 5px; }
+        .spec-info p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .tech-interactive-container { display: flex; flex-direction: column; gap: 30px; }
+        .tech-cloud { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        .tech-tag { background: var(--bg-card); border: 1px solid var(--border-glass); padding: 12px 24px; border-radius: 30px; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .tech-tag:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+        .tech-tag.active { background: rgba(88, 86, 214, 0.2); border-color: var(--primary); box-shadow: 0 0 25px var(--primary-glow); transform: scale(1.05) translateY(-5px); }
+        .tech-details-box { background: linear-gradient(145deg, #161d2d, #0f1420); border: 1px solid var(--primary); border-radius: 20px; padding: 30px; opacity: 1; box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,255,255,0.1); transition: all 0.3s ease; }
+        .tech-details-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--border-glass); padding-bottom: 15px; }
+        .tech-details-header i { font-size: 2.2rem; transition: color 0.3s ease; }
+        .tech-details-header h3 { font-size: 1.6rem; color: var(--text-main); }
+        .tech-details-content { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; }
+
+        /* ORGANIGRAMA CON FLIP CARDS 3D - JERARQUÍA REFINADA */
+        .org-tree { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-top: 40px; }
+        
+        .org-top-level { position: relative; z-index: 2; margin-bottom: 20px; display: flex; justify-content: center; width: 100%;}
+        .org-top-level::after { content: ''; position: absolute; bottom: -40px; left: 50%; width: 2px; height: 40px; background: var(--primary); transform: translateX(-50%); }
+        
+        .org-branches { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; position: relative; padding-top: 20px; width: 100%; }
+        .org-branches::before { content: ''; position: absolute; top: 0; left: 13%; right: 13%; height: 2px; background: var(--primary); }
+
+        .flip-card { background-color: transparent; width: 270px; height: 380px; perspective: 1000px; position: relative; }
+        .org-branches .flip-card::before { content: ''; position: absolute; top: -20px; left: 50%; width: 2px; height: 20px; background: var(--primary); transform: translateX(-50%); }
+        
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+        .flip-card:hover { z-index: 10; }
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+        
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 24px; padding: 25px 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+        .flip-card-front { background: linear-gradient(145deg, var(--bg-card), #0d121c); border: 1px solid var(--border-glass); align-items: center; }
+        .flip-card-back { background: linear-gradient(145deg, #131926, var(--bg-card)); border: 2px solid var(--primary); box-shadow: 0 15px 40px rgba(88, 86, 214, 0.25); transform: rotateY(180deg); justify-content: center; align-items: center; }
+
+        .dept-icon { font-size: 2.2rem; color: var(--secondary); margin-bottom: 12px; text-align: center; filter: drop-shadow(0 5px 10px rgba(0, 122, 255, 0.4));}
+        .dept-title { font-size: 0.95rem; color: var(--text-main); text-align: center; margin-bottom: 15px; font-weight: 600; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; line-height: 1.3;}
+        .member-list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .member-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; color: var(--text-muted); background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 12px; text-align: left; }
+        .member-item i { color: var(--primary); font-size: 1rem; flex-shrink: 0;}
+        .member-role { display: block; font-size: 0.65rem; color: var(--secondary); margin-top: 2px; font-weight: 500;}
+        
+        .back-content h4 { color: var(--accent); margin-bottom: 15px; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;}
+        .back-content p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; padding: 0 10px;}
+        .back-icon { font-size: 3rem; color: var(--primary); margin-bottom: 20px; opacity: 0.5; }
+
+        /* Floating Chat Widget */
+        .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; }
+        .chat-btn { width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--text-main); cursor: pointer; box-shadow: 0 10px 30px rgba(88, 86, 214, 0.5); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 2px solid rgba(255,255,255,0.2); }
+        .chat-btn:hover { transform: scale(1.1) rotate(-10deg); box-shadow: 0 15px 40px rgba(0, 122, 255, 0.6); }
+        .chat-window { width: 340px; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin-bottom: 20px; display: none; flex-direction: column; overflow: hidden; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .chat-header { background: linear-gradient(90deg, var(--primary), var(--secondary)); padding: 18px; font-weight: 600; display: flex; align-items: center; gap: 12px; font-size: 1.1rem; }
+        .chat-body { padding: 20px; height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; font-size: 0.95rem; }
+        .msg { padding: 12px 16px; border-radius: 18px; max-width: 85%; line-height: 1.5; }
+        .msg.bot { background: rgba(255,255,255,0.06); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg.user { background: var(--primary); align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px var(--primary-glow); }
+        .chat-footer { padding: 15px; border-top: 1px solid var(--border-glass); display: flex; gap: 10px; background: rgba(0,0,0,0.2); }
+        .chat-footer input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); padding: 10px 18px; border-radius: 25px; color: var(--text-main); outline: none; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        .chat-footer input:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); }
+        .chat-footer button { background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; width: 45px; border-radius: 50%; color: var(--text-main); cursor: pointer; transition: transform 0.2s ease; }
+        @keyframes popIn { from { transform: scale(0.8) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+        footer .footer-text { text-align: center; padding: 40px 0 120px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border-glass); margin-top: 50px; }
+
+        @media (max-width: 1200px) {
+            .org-branches::before { left: 8%; right: 8%; }
+        }
+        @media (max-width: 900px) {
+            .org-branches::before, .org-top-level::after, .org-branches .flip-card::before { display: none; }
+            .org-branches { padding-top: 0; flex-direction: column; align-items: center; gap: 30px;}
+            .flip-card { width: 100%; max-width: 320px; height: 350px; }
+        }
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 3rem; }
+            .specs-layout, .offers-grid { grid-template-columns: 1fr; gap: 40px; }
+            .floating-nav { width: 95%; justify-content: space-around; padding: 10px; gap: 2px; }
+            .floating-nav a { padding: 6px 12px; font-size: 0.9rem; }
+            .floating-nav a span { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow-right"></div>
+
+    <nav class="floating-nav" id="mainNav">
+        <a href="#hero" class="nav-item active"><i class="fa-solid fa-house"></i> <span>Inicio</span></a>
+        <a href="#problema" class="nav-item"><i class="fa-solid fa-triangle-exclamation"></i> <span>Retos</span></a>
+        <a href="#ofrece" class="nav-item"><i class="fa-solid fa-wand-magic-sparkles"></i> <span>Solución</span></a>
+        <a href="#specs" class="nav-item"><i class="fa-solid fa-layer-group"></i> <span>Specs</span></a>
+        <a href="#equipo" class="nav-item"><i class="fa-solid fa-sitemap"></i> <span>Equipo</span></a>
+    </nav>
+
+    <header id="hero">
+        <div class="hero-content container">
+            <h1><span>IUEM CONNECT</span>Aprende Hoy,<br>Domina Mañana</h1>
+            <p>El Centro de Idiomas Interactivo multiplataforma diseñado para transformar el aprendizaje del inglés mediante gamificación avanzada e Inteligencia Artificial.</p>
+            <a href="#problema" class="cta-btn">Explorar Proyecto <i class="fa-solid fa-rocket"></i></a>
+        </div>
+    </header>
+
+    <section id="problema" class="container reveal">
+        <h2 class="section-title">La Problemática Actual</h2>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <i class="fa-solid fa-brain"></i>
+                <h3>Métodos Tradicionales</h3>
+                <p>La enseñanza convencional se enfoca excesivamente en memorización y evaluaciones escritas rígidas, dejando de lado la fluidez oral.</p>
+            </div>
+            <div class="problem-card">
+                <i class="fa-solid fa-comments-slash"></i>
+                <h3>Bloqueo del Speaking</h3>
+                <p>La falta de espacios prácticos y dinámicos genera inseguridad, miedo al error y baja participación oral en los estudiantes de licenciatura.</p>
+            </div>
+            <div class="problem-card">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <h3>Falta de Interactividad</h3>
+                <p>La ausencia de herramientas tecnológicas modernas personalizadas limita la capacidad del alumno para aprender de forma autónoma a su propio ritmo.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="ofrece" class="container reveal">
+        <h2 class="section-title">Lo Que Ofrece la Plataforma</h2>
+        <div class="offers-grid">
+            <div class="offer-card">
+                <i class="fa-solid fa-robot"></i>
+                <h3>Asistente de IA</h3>
+                <p>Resolución de dudas gramaticales, explicaciones contextuales claras y generación de ejemplos a la medida las 24 horas.</p>
+            </div>
+            <div class="offer-card">
+                <i class="fa-solid fa-bullhorn"></i>
+                <h3>Enfoque en Speaking</h3>
+                <p>Priorización absoluta del desarrollo de la habilidad oral a través de simulaciones de situaciones reales y profesionales.</p>
+            </div>
+        </div>
+
+        <div class="phone-container">
+            <div class="phone-mockup">
+                <div class="app-screen-container">
+                    <div class="app-status-bar">
+                        <span>8:07</span>
+                        <div class="icons">
+                            <i class="fa-solid fa-signal"></i>
+                            <i class="fa-solid fa-wifi"></i>
+                            <i class="fa-solid fa-battery-three-quarters"></i>
+                        </div>
+                    </div>
+                    <div class="app-content" id="appContent">
+                        <!-- PANTALLA 1: INICIO -->
+                        <div id="screen-inicio" class="screen active">
+                            <div class="app-header">
+                                <div><h2>Hola, "Uriel"</h2><span>ADVANCED</span></div>
+                                <div class="app-header-avatar"><i class="fa-solid fa-user"></i></div>
+                            </div>
+                            <div class="app-card-progress">
+                                <h3>Tu progreso</h3>
+                                <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+                                <div class="progress-stats"><span id="homeXP">1960 XP</span><span>Nivel 20</span></div>
+                            </div>
+                            <div class="app-stats-grid">
+                                <div class="app-stat-box"><i class="fa-solid fa-fire"></i><h4>0</h4><span>Racha</span></div>
+                                <div class="app-stat-box"><i class="fa-solid fa-book-open"></i><h4>20</h4><span>Lecciones</span></div>
+                            </div>
+                            <h3 class="app-section-title">Daily Challenge</h3>
+                            <div class="app-card-daily">
+                                <h3>Completa 5 ejercicios hoy</h3><p>Recompensa: +50 XP</p>
+                                <button class="app-btn-white" onclick="navToApp('screen-quiz')">Comenzar</button>
+                            </div>
+                        </div>
+
+                        <!-- PANTALLA 2: EJERCICIOS -->
+                        <div id="screen-cursos" class="screen">
+                            <h3 class="app-section-title" style="margin-top: 10px;">Achievements</h3>
+                            <div class="achievements-row">
+                                <div class="achievement-box active"><i class="fa-solid fa-medal"></i><span>Primer<br>ejercicio</span></div>
+                                <div class="achievement-box"><i class="fa-solid fa-star" style="color: var(--text-muted);"></i><span>100 XP</span></div>
+                                <div class="achievement-box"><i class="fa-solid fa-fire" style="color: var(--text-muted);"></i><span>7 días</span></div>
+                            </div>
+                            <h3 class="app-section-title">Cursos</h3>
+                            <div class="courses-grid">
+                                <div class="course-box" onclick="navToApp('screen-quiz')"><i class="fa-solid fa-book"></i><br><span>Gramática</span></div>
+                                <div class="course-box"><i class="fa-solid fa-headphones"></i><br><span>Listening</span></div>
+                                <div class="course-box"><i class="fa-solid fa-headset"></i><br><span>Speaking</span></div>
+                                <div class="course-box"><i class="fa-solid fa-microphone"></i><br><span>Pronunciación</span></div>
+                            </div>
+                        </div>
+
+                        <!-- PANTALLA 3: RANKING -->
+                        <div id="screen-ranking" class="screen">
+                            <div class="ranking-header"><h2>Leaderboard</h2></div>
+                            <div class="ranking-banner">
+                                <i class="fa-solid fa-trophy"></i><h3>Top Jugadores</h3><p>Compite y sube de nivel 🚀</p>
+                            </div>
+                            <div class="leaderboard-list">
+                                <div class="lb-item first">
+                                    <div class="lb-rank">#1</div>
+                                    <div class="lb-info"><h4>"Uriel"</h4><span><i class="fa-solid fa-sparkles"></i> Nivel 20</span></div>
+                                    <div class="lb-score"><i class="fa-solid fa-fire"></i><span id="rankXP">1960 XP</span></div>
+                                    <div class="lb-progress"><div class="lb-progress-fill" style="width: 70%;"></div></div>
+                                </div>
+                                <div class="lb-item">
+                                    <div class="lb-rank">#2</div>
+                                    <div class="lb-info"><h4>Ricardo</h4><span><i class="fa-solid fa-sparkles"></i> Nivel 1</span></div>
+                                    <div class="lb-score"><i class="fa-solid fa-fire" style="color: var(--text-muted);"></i><span style="color: var(--text-muted);">0 XP</span></div>
+                                    <div class="lb-progress"><div class="lb-progress-fill" style="width: 10%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANTALLA 4: PERFIL -->
+                        <div id="screen-perfil" class="screen">
+                            <div class="profile-header">
+                                <div class="profile-avatar"><i class="fa-solid fa-user" style="color: white; font-size: 2.5rem;"></i></div>
+                                <h2>Alumno IUEM</h2><span>Nivel A2</span>
+                            </div>
+                            <div class="profile-stats-list">
+                                <div class="p-stat-item"><div class="p-stat-icon"><i class="fa-solid fa-star" style="color: #fff;"></i></div><div class="p-stat-info"><h4>XP Total</h4><span id="profXP">1250 XP</span></div></div>
+                                <div class="p-stat-item"><div class="p-stat-icon"><i class="fa-solid fa-fire" style="color: #fff;"></i></div><div class="p-stat-info"><h4>Racha</h4><span>7 días</span></div></div>
+                                <div class="p-stat-item"><div class="p-stat-icon"><i class="fa-solid fa-circle-check" style="color: #fff;"></i></div><div class="p-stat-info"><h4>Ejercicios completados</h4><span>52</span></div></div>
+                            </div>
+                        </div>
+
+                        <!-- PANTALLA 5: QUIZ -->
+                        <div id="screen-quiz" class="screen">
+                            <div class="quiz-header-top">
+                                <span><i class="fa-solid fa-arrow-left" onclick="navToApp('screen-inicio')" style="cursor:pointer; font-size:1.2rem; margin-right:15px;"></i></span>
+                                <span style="color: var(--text-main); font-weight: 600;">ADVANCED</span><span></span>
+                            </div>
+                            <div class="quiz-box">
+                                <h4>Which of the following sentences is in the passive voice?</h4>
+                                <div class="quiz-option" onclick="checkAnswer(this, false)"><span>The manager wrote the report.</span><i class="fa-regular fa-circle"></i></div>
+                                <div class="quiz-option" id="correctOpt" onclick="checkAnswer(this, true)"><span>The report was written by the manager.</span><i class="fa-regular fa-circle"></i></div>
+                                <div class="quiz-option" onclick="checkAnswer(this, false)"><span>The manager is writing the report.</span><i class="fa-regular fa-circle"></i></div>
+                            </div>
+                            <div class="success-banner" id="successBanner">
+                                <i class="fa-solid fa-circle-check"></i> ¡Correcto! +50 XP <br><span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Guardado en Firebase</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="app-bottom-nav">
+                        <div class="app-nav-item active" onclick="navToApp('screen-inicio', this)"><i class="fa-solid fa-house"></i><span>Inicio</span></div>
+                        <div class="app-nav-item" onclick="navToApp('screen-cursos', this)"><i class="fa-solid fa-book-open"></i><span>Ejercicios</span></div>
+                        <div class="app-nav-item" onclick="toggleChat()"><i class="fa-solid fa-robot"></i><span>IA</span></div>
+                        <div class="app-nav-item" onclick="navToApp('screen-ranking', this)"><i class="fa-solid fa-trophy"></i><span>Ranking</span></div>
+                        <div class="app-nav-item" onclick="navToApp('screen-perfil', this)"><i class="fa-solid fa-user"></i><span>Perfil</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ESPECIFICACIONES TÉCNICAS -->
+    <section id="specs" class="container reveal">
+        <h2 class="section-title">Especificaciones Técnicas</h2>
+        <div class="specs-layout">
+            <div class="spec-list">
+                <div class="spec-item">
+                    <div class="spec-icon"><i class="fa-mobile-alt"></i></div>
+                    <div class="spec-info"><h4>Desarrollo Multiplataforma</h4><p>Construido con <strong>Flutter y Dart</strong>, asegurando rendimiento tanto en Android como en iOS.</p></div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><i class="fa-solid fa-database"></i></div>
+                    <div class="spec-info"><h4>Estructura de Datos Robusta</h4><p>Sincronización en la nube mediante <strong>Firebase</strong>, administrando de forma segura Authentication.</p></div>
+                </div>
+            </div>
+            
+            <div class="tech-interactive-container">
+                <div class="tech-cloud">
+                    <div class="tech-tag" onclick="showTechInfo('flutter', this)"><i class="fa-brands fa-flutter" style="color: #02569B;"></i> Flutter</div>
+                    <div class="tech-tag" onclick="showTechInfo('firebase', this)"><i class="fa-solid fa-fire-flame-curved" style="color: #FFCA28;"></i> Firebase</div>
+                    <div class="tech-tag" onclick="showTechInfo('ai', this)"><i class="fa-solid fa-brain" style="color: #9b5de5;"></i> AI Integration</div>
+                    <div class="tech-tag" onclick="showTechInfo('dart', this)"><i class="fa-solid fa-code" style="color: #00d2ff;"></i> Dart Lan</div>
+                    <div class="tech-tag" onclick="showTechInfo('mobile', this)"><i class="fa-solid fa-mobile-screen" style="color: #2ecc71;"></i> Android & iOS</div>
+                </div>
+                
+                <div id="techDetailsBox" class="tech-details-box">
+                    <div class="tech-details-header">
+                        <i id="techIcon" class="fa-solid fa-mouse-pointer" style="color: var(--text-muted);"></i>
+                        <h3 id="techTitle">Selecciona una tecnología</h3>
+                    </div>
+                    <div id="techDesc" class="tech-details-content">Haz clic en las etiquetas superiores para explorar las especificaciones de las herramientas utilizadas en el ecosistema IUEM Connect.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ORGANIGRAMA CON FLIP CARDS 3D -->
+    <section id="equipo" class="container reveal">
+        <h2 class="section-title">Organigrama del Equipo</h2>
+        <p style="text-align: center; color: var(--text-muted); max-width: 800px; margin: 0 auto 30px auto; font-size: 1.1rem;">
+            IUEM Connect es desarrollado por un equipo multidisciplinario que une el talento de diversas licenciaturas para crear una experiencia educativa integral.
+        </p>
+
+        <div class="org-tree">
+            <!-- Nivel 1: Raíz -->
+            <div class="org-top-level">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="dept-icon"><i class="fa-solid fa-language"></i></div>
+                            <h3 class="dept-title">Enseñanza de la Lengua Inglesa</h3>
+                            <div class="member-list">
+                                <div class="member-item">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                    <div>Edson Giovanni Bernaldez Delgado</div>
+                                </div>
+                                <div class="member-item">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                    <div>Alexis González Jiménez</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <i class="fa-solid fa-comments back-icon"></i>
+                            <div class="back-content">
+                                <h4>Dirección y Curriculum</h4>
+                                <p>Líderes del proyecto. Encargados de diseñar y estructurar el contenido de los bloques de aprendizaje desde niveles A1 a B2 y coordinar las situaciones reales de <em>Speaking</em>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nivel 2: Ramas de Departamentos (Flip Cards) -->
+            <div class="org-branches">
+                
+                <!-- Pedagogía -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="dept-icon"><i class="fa-solid fa-book-open-reader"></i></div>
+                            <h3 class="dept-title">Pedagogía</h3>
+                            <div class="member-list">
+                                <div class="member-item">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                    <div>Andrea Carmina Mendoza Juvera</div>
+                                </div>
+                                <div class="member-item">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                    <div>Frida Mateos Cobos</div>
+                                </div>
+                                <div class="member-item">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                    <div>Melanie Michelle Perez Casas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <i class="fa-solid fa-lightbulb back-icon"></i>
+                            <div class="back-content">
+                                <h4>Metodología Educativa</h4>
+                                <p>Especialistas en aprendizaje activo. Aseguran que las estrategias de gamificación cumplan con objetivos didácticos sólidos para combatir el estrés y fomentar la fluidez.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diseño Industrial -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="dept-icon"><i class="fa-solid fa-pen-ruler"></i></div>
+                            <h3 class="dept-title">Diseño Industrial</h3>
+                            <div class="member-list">
+                                <div class="member-item">
+                                    <i class="fa-solid fa-palette"></i>
+                                    <div>Fernando Rodríguez Reyes</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <i class="fa-solid fa-bezier-curve back-icon"></i>
+                            <div class="back-content">
+                                <h4>UX/UI y Estética</h4>
+                                <p>Aportan la visión de usabilidad, ergonomía digital e identidad visual (UI/UX) para garantizar que la plataforma moderna sea intuitiva y accesible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gestión Corporativa -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="dept-icon"><i class="fa-solid fa-briefcase"></i></div>
+                            <h3 class="dept-title">Gestión Corporativa</h3>
+                            <div class="member-list">
+                                <div class="member-item">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                    <div>Tania Paola Rodríguez Alvario</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <i class="fa-solid fa-chart-line back-icon"></i>
+                            <div class="back-content">
+                                <h4>Estrategia y Viabilidad</h4>
+                                <p>Lleva la planificación estratégica, gestionando el análisis de presupuestos de infraestructura y la proyección de crecimiento de la aplicación.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sistemas Computacionales -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="dept-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                            <h3 class="dept-title">Ingeniería en Sistemas</h3>
+                            <div class="member-list">
+                                <div class="member-item">
+                                    <i class="fa-solid fa-user-astronaut"></i>
+                                    <div>Carlos Uriel González González</div>
+                                </div>
+                                <div class="member-item">
+                                    <i class="fa-solid fa-user-astronaut"></i>
+                                    <div>Ricardo Amaury González Barrón</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <i class="fa-solid fa-code back-icon"></i>
+                            <div class="back-content">
+                                <h4>Aportación Técnica</h4>
+                                <p>Desarrollo de la arquitectura de software utilizando <strong>Flutter</strong> y <strong>Firebase</strong>. Integran la API de Inteligencia Artificial y estructuran la base de datos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <i class="fa-solid fa-robot"></i> Asistente de IA de Prueba
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="msg bot">¡Hola! Soy tu tutor de IA dentro de IUEM Connect. ¿Tienes alguna duda sobre temas como el Present Perfect o vocabulario laboral?</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Escribe tu duda aquí...">
+                <button onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <div class="chat-btn" onclick="toggleChat()">
+            <i class="fa-solid fa-comment-dots"></i>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-text container">
+            <p>&copy; 2026 IUEM Connect. Diseñado como propuesta tecnológica interactiva para la comunidad estudiantil.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', revealSections);
+        window.addEventListener('DOMContentLoaded', revealSections);
+
+        function revealSections() {
+            const reveals = document.querySelectorAll('.reveal');
+            const navItems = document.querySelectorAll('.nav-item');
+            let currentSection = "";
+
+            reveals.forEach(reveal => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < window.innerHeight - 150) reveal.classList.add('active');
+            });
+
+            document.querySelectorAll('header, section').forEach(section => {
+                if (pageYOffset >= section.offsetTop - 200) currentSection = section.getAttribute('id');
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(currentSection)) item.classList.add('active');
+            });
+        }
+
+        function navToApp(screenId, navElement = null) {
+            document.querySelectorAll('.app-content .screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            if(navElement) {
+                document.querySelectorAll('.app-bottom-nav .app-nav-item').forEach(item => item.classList.remove('active'));
+                navElement.classList.add('active');
+            }
+        }
+
+        let pointsAdded = false, currentXP = 1960;
+        function checkAnswer(element, isCorrect) {
+            if(pointsAdded) return; 
+            document.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+
+            if(isCorrect) {
+                element.classList.add('correct');
+                element.querySelector('i').className = "fa-solid fa-circle-check";
+                document.getElementById('successBanner').style.display = 'block';
+                currentXP += 50;
+                document.getElementById('homeXP').innerText = currentXP + " XP";
+                document.getElementById('rankXP').innerText = currentXP + " XP";
+            } else {
+                element.classList.add('wrong');
+                element.querySelector('i').className = "fa-solid fa-circle-xmark";
+                const correctOpt = document.getElementById('correctOpt');
+                correctOpt.classList.add('correct');
+                correctOpt.querySelector('i').className = "fa-solid fa-circle-check";
+            }
+            pointsAdded = true;
+        }
+
+        // --- FUNCION DE ESPECIFICACIONES ---
+        const techData = {
+            'flutter': { 
+                title: 'Flutter Framework', 
+                iconClass: 'fa-brands fa-flutter', 
+                color: '#02569B', 
+                desc: 'Framework de código abierto desarrollado por Google. En IUEM Connect se utiliza para construir la interfaz de usuario de forma fluida y expresiva, garantizando un rendimiento a 60 FPS y una experiencia visual atractiva (UI/UX) con modo oscuro nativo.' 
+            },
+            'firebase': { 
+                title: 'Google Firebase', 
+                iconClass: 'fa-solid fa-fire-flame-curved', 
+                color: '#FFCA28', 
+                desc: 'Backend as a Service (BaaS). Funciona como el corazón de los datos de la app. Gestiona la autenticación de los alumnos (correo y biometría), almacena el progreso de las lecciones, los Puntos de Experiencia (XP) y actualiza el Leaderboard en tiempo real.' 
+            },
+            'ai': { 
+                title: 'Integración de IA', 
+                iconClass: 'fa-solid fa-brain', 
+                color: '#9b5de5', 
+                desc: 'Motor inteligente integrado en la plataforma. Actúa como un tutor personal 24/7 capaz de procesar lenguaje natural, analizar las respuestas del alumno, explicar estructuras gramaticales complejas y evaluar ejercicios de speaking en tiempo real.' 
+            },
+            'dart': { 
+                title: 'Dart Language', 
+                iconClass: 'fa-solid fa-code', 
+                color: '#00d2ff', 
+                desc: 'Lenguaje de programación orientado a objetos en el que está escrito Flutter. Proporciona la lógica robusta necesaria para manejar los estados de la aplicación, calcular rachas de días, validar respuestas y conectar la interfaz gráfica con las bases de datos de Firebase.' 
+            },
+            'mobile': { 
+                title: 'Multiplataforma', 
+                iconClass: 'fa-solid fa-mobile-screen', 
+                color: '#2ecc71', 
+                desc: 'Arquitectura de desarrollo unificada. Permite que el mismo código fuente se compile nativamente tanto para dispositivos Android como para iPhone, reduciendo los tiempos de desarrollo y asegurando que toda la comunidad estudiantil del IUEM tenga acceso sin importar su dispositivo.' 
+            }
+        };
+
+        function showTechInfo(techKey, element) {
+            document.querySelectorAll('.tech-tag').forEach(tag => tag.classList.remove('active'));
+            element.classList.add('active');
+            
+            const data = techData[techKey];
+            const detailBox = document.getElementById('techDetailsBox');
+            
+            detailBox.style.opacity = '0';
+            detailBox.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                document.getElementById('techIcon').className = data.iconClass;
+                document.getElementById('techIcon').style.color = data.color;
+                document.getElementById('techTitle').innerText = data.title;
+                document.getElementById('techDesc').innerText = data.desc;
+                
+                detailBox.style.opacity = '1';
+                detailBox.style.transform = 'translateY(0)';
+            }, 250);
+        }
+
+        function toggleChat() {
+            const win = document.getElementById('chatWindow');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+            if(win.style.display === 'flex') document.getElementById('chatInput').focus();
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('chatInput'), body = document.getElementById('chatBody');
+            if(!input.value.trim()) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'msg user'; userDiv.innerText = input.value;
+            body.appendChild(userDiv);
+            
+            const query = input.value.toLowerCase(); input.value = '';
+            body.scrollTop = body.scrollHeight;
+
+            setTimeout(() => {
+                const botDiv = document.createElement('div'); botDiv.className = 'msg bot';
+                if(query.includes('present')) botDiv.innerHTML = '<strong>Present Perfect:</strong> Se forma con <em>have/has</em> + participio pasado.';
+                else if(query.includes('vocabulario')) botDiv.innerText = '¡Excelente duda! El Módulo Curricular incluye temas clave para entrevistas de trabajo.';
+                else botDiv.innerText = '¡Entendido! Con este asistente integrado, tus alumnos recibirán retroalimentación inmediata.';
+                body.appendChild(botDiv); body.scrollTop = body.scrollHeight;
+            }, 800);
+        }
+
+        document.getElementById('chatInput').addEventListener('keypress', e => { if(e.key === 'Enter') sendMsg(); });
+    </script>
+</body>
+</html>
