@@ -1791,6 +1791,55 @@
             }
 
         }
+        /* =========================================================
+           BOTÓN DE DESCARGA APK (Galería)
+           ========================================================= */
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            
+            /* Usamos tu azul institucional con un degradado sutil */
+            background: linear-gradient(135deg, var(--blue-700), var(--blue-600));
+            color: var(--white);
+            
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            
+            padding: 16px 36px;
+            margin-top: 25px; /* Separación de la imagen */
+            
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            
+            /* Sombra azul para armonizar con el fondo */
+            box-shadow: 0 12px 35px rgba(11, 94, 215, 0.38);
+            
+            /* Tu misma transición premium del resto de botones */
+            transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+            cursor: pointer;
+        }
+
+        .download-btn i {
+            font-size: 1.35rem;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            
+            /* Cambia al amarillo vibrante de tu paleta en el hover */
+            background: linear-gradient(135deg, var(--yellow), #FFD85A);
+            color: var(--navy-950); /* Texto oscuro para que resalte */
+            
+            border-color: var(--yellow);
+            
+            /* Sombra amarilla premium */
+            box-shadow: 0 20px 45px rgba(255, 199, 44, 0.4);
+        }
     </style>
 </head>
 
@@ -1950,6 +1999,12 @@
                     <img src="img/pantalla.webp" alt="Pantalla de inicio">
 
                 </div>
+
+                
+                    <a href="apk/IUEM_CONNECT.apk" download="IUEM-CONNECT.apk" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Descargar APK
+                    </a>
 
             </div>
 
@@ -2739,19 +2794,19 @@
             'XvCX2Xd2maE';
 
 
-function openVideoModal() {
+        function openVideoModal() {
 
-    youtubeVideo.src =
-        `https://www.youtube.com/embed/o1F2UZ097sk?autoplay=1`;
+            youtubeVideo.src =
+                `https://www.youtube.com/embed/o1F2UZ097sk?autoplay=1`;
 
-    videoModal.classList.add(
-        'active'
-    );
+            videoModal.classList.add(
+                'active'
+            );
 
-    document.body.style.overflow =
-        'hidden';
+            document.body.style.overflow =
+                'hidden';
 
-}
+        }
 
 
         function closeVideoModal() {
